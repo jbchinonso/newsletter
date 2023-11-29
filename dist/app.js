@@ -6,12 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const index_1 = __importDefault(require("./routes/index"));
 const members_routes_1 = __importDefault(require("./routes/members.routes"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 function default_1() {
     const app = (0, express_1.default)();
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: false }));
     app.use("/", index_1.default);
-    app.use('/api/v1/members', members_routes_1.default);
+    app.use("/api/v1/members", members_routes_1.default);
     process.on("unhandledRejection", function (reason, p) {
         console.log("Unhandled", reason, p); // log all your errors, "unsuppressing" them.
         throw reason; // optional, in case you want to treat these as errors
@@ -29,7 +31,7 @@ function default_1() {
         res.status(err.statusCode || 400).send({
             message: err.message,
             status: err.statusCode || 400,
-            data: null
+            data: null,
         });
     });
     return app;
