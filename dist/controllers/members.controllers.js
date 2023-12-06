@@ -55,15 +55,29 @@ MemberController.join = (0, utils_helpers_1.catchAsync)((req, res, next) => __aw
     const subject = "confirm your subscription";
     const variables = {
         name: firstName,
-        link: verificationToken,
+        link: process.env.FRONT_END_URL + `?verify=${verificationToken}`
     };
     yield subscribers_model_1.default.create(memberInfo);
     const mailSent = yield (0, utils_helpers_1.default)(email, subject, variables, welcome_templates_1.default);
-    console.log(mailSent);
     res.json({
         status: res.statusCode,
         message: "Sign succcessful, please check your mail for confirmation link",
         data: null,
+    });
+}));
+MemberController.confirmJoin = (0, utils_helpers_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { token: verificationToken } = req.query;
+    const verifiedMember = yield subscribers_model_1.default.findOneAndUpdate({ verificationToken }, {
+        verified: true,
+        verificationDate: Date.now(),
+        verificationToken: null
+    }, { new: true });
+    if (!verifiedMember)
+        return next(new utils_appError_1.default('please provide a valid token', 400));
+    res.status(200).send({
+        status: res.statusCode,
+        message: 'subscription confirmed successfully',
+        data: verifiedMember
     });
 }));
 exports.default = MemberController;

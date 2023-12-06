@@ -7,4 +7,5 @@ const express_1 = __importDefault(require("express"));
 const members_controllers_1 = __importDefault(require("../controllers/members.controllers"));
 const router = express_1.default.Router();
 router.post('/join', members_controllers_1.default.join);
+router.get('/confirm-subscription', members_controllers_1.default.confirmJoin);
 exports.default = router;

@@ -4,6 +4,7 @@ const router = express.Router();
 
 
 router.post('/join', MemberController.join)
+router.get('/confirm-subscription', MemberController.confirmJoin)
 
 
 

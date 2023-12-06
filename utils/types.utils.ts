@@ -5,6 +5,7 @@
     MAIL_PASS: string;
     MAIL_HOST: string;
     SMTP_PORT: number;
+    FRONT_END_URL: string;
   }
 }
 };

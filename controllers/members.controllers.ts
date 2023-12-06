@@ -24,7 +24,7 @@ export default class MemberController {
       const subject = "confirm your subscription";
       const variables = {
         name: firstName,
-        link: verificationToken,
+        link: process.env.FRONT_END_URL+`?verify=${verificationToken}`
       };
 
       await Subscriber.create(memberInfo);
@@ -43,4 +43,28 @@ export default class MemberController {
       });
     }
   );
+
+  static confirmJoin = catchAsync(async(req: Request, res:Response, next:NextFunction) => {
+      const {token: verificationToken} = req.query;
+
+
+      const verifiedMember = await Subscriber.findOneAndUpdate(
+        {verificationToken},
+        {
+          verified: true,
+          verificationDate: Date.now(),
+          verificationToken: null
+        },
+        {new: true}
+        )
+
+        if(!verifiedMember) return next(new AppError('please provide a valid token', 400))
+
+        res.status(200).send({
+          status: res.statusCode,
+          message: 'subscription confirmed successfully',
+          data: verifiedMember
+        })
+
+  })
 }
